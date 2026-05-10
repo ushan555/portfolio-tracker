@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Lock In OS — Ushan</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0a0a0a; --s1:#111; --s2:#171717; --s3:#1f1f1f; --s4:#272727;
+    --b1:#2a2a2a; --b2:#333;
+    --accent:#d63031; --accent2:#ff6b6b;
+    --adim:rgba(214,48,49,0.1); --aborder:rgba(214,48,49,0.25);
+    --text:#f0f0f0; --text2:#909090; --text3:#505050; --text4:#333;
+    --green:#4ade80; --orange:#f59e0b; --blue:#60a5fa; --purple:#a78bfa;
+  }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;padding-bottom:80px;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(214,48,49,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(214,48,49,0.018) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0;}
+  .page{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 24px;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+  .a1{animation:fadeUp .55s .00s ease both} .a2{animation:fadeUp .55s .07s ease both}
+  .a3{animation:fadeUp .55s .14s ease both} .a4{animation:fadeUp .55s .21s ease both}
+  .a5{animation:fadeUp .55s .28s ease both} .a6{animation:fadeUp .55s .35s ease both}
+  .a7{animation:fadeUp .55s .42s ease both}
+
+  /* COVER */
+  .cover{height:180px;background:linear-gradient(135deg,#0a0000,#1a0303 30%,#2d0606 55%,#1a1a1a);position:relative;overflow:hidden;margin:0 -24px;animation:fadeIn .8s ease both;}
+  .cover::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 60%,rgba(214,48,49,.35) 0%,transparent 55%),radial-gradient(ellipse at 75% 30%,rgba(180,30,30,.2) 0%,transparent 50%);}
+  .cover-text{position:absolute;bottom:20px;right:32px;font-family:'Syne',sans-serif;font-size:72px;font-weight:800;color:rgba(214,48,49,.07);letter-spacing:-3px;line-height:1;user-select:none;}
+  .cover-badge{position:absolute;top:20px;right:24px;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);border:1px solid rgba(214,48,49,.3);color:rgba(255,255,255,.6);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;border-radius:20px;}
+
+  /* HERO */
+  .hero{padding:16px 0 0;}
+  .hero-icon{font-size:48px;margin-bottom:8px;display:block;line-height:1;}
+  .hero-title{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;letter-spacing:-.5px;line-height:1.1;margin-bottom:4px;}
+  .hero-sub{font-size:13px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.06em;margin-bottom:20px;}
+
+  /* LOCK IN BANNER */
+  .lockin-banner{background:linear-gradient(135deg,#1a0000,#280808 55%,#1a1a1a);border:1px solid #2e1010;border-radius:10px;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;position:relative;overflow:hidden;}
+  .lockin-banner::after{content:'~';position:absolute;right:20px;top:50%;transform:translateY(-50%);font-family:'Syne',sans-serif;font-size:96px;font-weight:800;color:rgba(214,48,49,.04);pointer-events:none;line-height:1;}
+  .lb-label{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,.28);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px;}
+  .lb-week{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#fff;letter-spacing:-.5px;line-height:1;}
+  .lb-sub{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,.3);margin-top:4px;}
+  .lb-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+  .lb-date{font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.25);letter-spacing:.08em;text-transform:uppercase;}
+  .lb-tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
+  .lb-tag{font-family:'DM Mono',monospace;font-size:9px;padding:3px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:rgba(255,255,255,.4);letter-spacing:.06em;}
+  .lb-tag.active{border-color:rgba(214,48,49,.5);background:rgba(214,48,49,.15);color:#ff8080;animation:pulse 2.5s infinite;}
+
+  /* QUOTE */
+  .quote{border-left:2px solid var(--accent);padding:10px 16px;background:var(--adim);border-radius:0 6px 6px 0;margin-bottom:28px;}
+  .quote-text{font-size:13px;color:rgba(255,255,255,.45);font-style:italic;line-height:1.6;}
+
+  /* SECTION LABEL */
+  .sl{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+  .sl::after{content:'';flex:1;height:1px;background:var(--b1);}
+
+  /* CARD */
+  .card{background:var(--s1);border:1px solid var(--b1);border-radius:10px;overflow:hidden;}
+  .card-pad{padding:16px;}
+  .card-title{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+
+  /* GRID */
+  .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .g211{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;}
+  .mb12{margin-bottom:12px;} .mb28{margin-bottom:28px;}
+
+  /* FOCUS BLOCK */
+  .focus-block{background:linear-gradient(135deg,#1a0000,#280808 60%,#1e1e1e);border-radius:8px;padding:16px 18px;margin-bottom:10px;position:relative;overflow:hidden;}
+  .focus-block::after{content:'🔒';position:absolute;right:14px;top:12px;font-size:26px;opacity:.1;}
+  .fb-label{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,.3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:5px;}
+  .fb-text{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;color:#fff;line-height:1.2;cursor:pointer;border-bottom:1px dashed rgba(255,255,255,.1);padding-bottom:2px;}
+  .fb-text:hover{border-bottom-color:rgba(255,255,255,.3);}
+  .fb-week{font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.25);margin-top:5px;}
+
+  /* EDITABLE INPUTS */
+  .edit-input{background:var(--s3);border:1px solid var(--b2);border-radius:6px;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);width:100%;outline:none;transition:border-color .15s;}
+  .edit-input:focus{border-color:var(--accent);}
+  .edit-input::placeholder{color:var(--text4);}
+  select.edit-input{cursor:pointer;}
+
+  /* ADD BUTTON */
+  .add-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text3);cursor:pointer;padding:6px 10px;border-radius:6px;transition:all .15s;border:1px dashed var(--b1);width:100%;margin-top:6px;background:none;}
+  .add-btn:hover{color:var(--accent);border-color:var(--accent);background:var(--adim);}
+
+  /* ICON BTN */
+  .icon-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;padding:2px 5px;border-radius:3px;transition:all .12s;line-height:1;}
+  .icon-btn:hover{color:var(--accent);background:var(--adim);}
+
+  /* CHECKLIST */
+  .check-list{display:flex;flex-direction:column;gap:6px;}
+  .check-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);padding:7px 10px;background:var(--s2);border-radius:6px;transition:background .12s;}
+  .check-item:hover{background:var(--s3);}
+  .check-item.done{opacity:.4;}
+  .check-item.done .ci-text{text-decoration:line-through;color:var(--text3);}
+  .ci-box{width:15px;height:15px;border-radius:3px;border:1.5px solid var(--b2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;cursor:pointer;transition:all .15s;}
+  .check-item.done .ci-box{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .ci-text{flex:1;line-height:1.4;}
+  .ci-tag{font-family:'DM Mono',monospace;font-size:9px;padding:1px 7px;border-radius:3px;flex-shrink:0;cursor:pointer;}
+  .ci-tag.high{background:rgba(214,48,49,.15);color:#ff8080;}
+  .ci-tag.med{background:rgba(245,158,11,.15);color:#fcd34d;}
+  .ci-tag.low{background:var(--s3);color:var(--text3);}
+
+  /* HABIT TRACKER */
+  .habit-list{display:flex;flex-direction:column;}
+  .habit-row{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;border-bottom:1px solid var(--s3);transition:background .1s;gap:8px;}
+  .habit-row:last-child{border-bottom:none;}
+  .habit-row:hover{background:var(--s2);}
+  .habit-name{font-size:13px;color:var(--text2);flex:1;cursor:pointer;}
+  .habit-name:hover{color:var(--text);}
+  .habit-days{display:flex;gap:4px;}
+  .hd{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:9px;font-weight:600;border:1px solid var(--b1);color:var(--text4);cursor:pointer;transition:all .12s;user-select:none;}
+  .hd:hover{border-color:var(--b2);color:var(--text3);}
+  .hd.done{background:rgba(214,48,49,.2);border-color:rgba(214,48,49,.35);color:#ff8080;}
+  .hd.miss{background:var(--s2);color:var(--text4);}
+  .hd.today{border:1.5px solid var(--accent);color:var(--accent);font-weight:700;}
+  .hd.today.done{background:rgba(214,48,49,.2);border-color:var(--accent);color:#ff8080;}
+
+  /* CALENDAR */
+  .week-cal{display:grid;grid-template-columns:48px repeat(7,1fr);border:1px solid var(--b1);border-radius:10px;overflow:hidden;background:var(--s1);font-size:12px;}
+  .wc-col-hdr{border-bottom:1px solid var(--b1);padding:10px 6px;text-align:center;background:var(--s2);}
+  .wc-col-hdr.time-col{border-right:1px solid var(--b1);}
+  .wc-day-name{font-family:'DM Mono',monospace;font-size:9px;font-weight:600;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px;}
+  .wc-day-num{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text2);line-height:1;}
+  .wc-col-hdr.today-hdr{background:#1e0606;}
+  .wc-col-hdr.today-hdr .wc-day-num{color:var(--accent);}
+  .wc-col-hdr.today-hdr .wc-day-name{color:var(--accent);}
+  .wc-time{border-right:1px solid var(--b1);border-bottom:1px solid #1a1a1a;padding:6px 6px 0;min-height:54px;font-family:'DM Mono',monospace;font-size:9px;color:var(--text4);text-align:right;background:var(--s2);display:flex;align-items:flex-start;justify-content:flex-end;}
+  .wc-cell{border-right:1px solid #1c1c1c;border-bottom:1px solid #1a1a1a;padding:3px;min-height:54px;cursor:pointer;transition:background .1s;position:relative;}
+  .wc-cell:last-child{border-right:none;}
+  .wc-cell:hover{background:var(--s2);}
+  .wc-cell.today-col{background:#120404;}
+  .wc-cell.today-col:hover{background:#1a0606;}
+  .wc-ev{border-radius:4px;padding:3px 6px;margin-bottom:2px;font-size:10px;font-weight:500;line-height:1.3;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:4px;}
+  .wc-ev:hover .ev-del{opacity:1;}
+  .ev-del{opacity:0;font-size:10px;color:var(--text3);transition:opacity .1s;}
+  .wc-ev.red   {background:rgba(214,48,49,.18);color:#ff8080;border-left:2px solid var(--accent);}
+  .wc-ev.orange{background:rgba(245,158,11,.15);color:#fcd34d;border-left:2px solid var(--orange);}
+  .wc-ev.blue  {background:rgba(96,165,250,.15);color:#93c5fd;border-left:2px solid var(--blue);}
+  .wc-ev.purple{background:rgba(167,139,250,.15);color:#c4b5fd;border-left:2px solid var(--purple);}
+  .wc-ev.green {background:rgba(74,222,128,.12);color:#86efac;border-left:2px solid var(--green);}
+  .wc-last{border-bottom:none!important;}
+
+  /* PORTFOLIO EMBED */
+  .embed-wrap{background:var(--s1);border:1px solid var(--b1);border-radius:10px;overflow:hidden;}
+  .embed-chrome{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--s2);border-bottom:1px solid var(--b1);}
+  .ec-url{flex:1;background:var(--s3);border-radius:4px;height:20px;display:flex;align-items:center;padding:0 10px;}
+  .ec-url span{font-family:'DM Mono',monospace;font-size:9px;color:var(--text4);}
+  .ec-live{font-family:'DM Mono',monospace;font-size:9px;color:var(--green);animation:pulse 2.5s infinite;}
+  .embed-frame{width:100%;height:700px;border:none;display:block;}
+
+  /* PROGRESS */
+  .prog-list{display:flex;flex-direction:column;gap:13px;}
+  .prog-item{position:relative;}
+  .prog-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;gap:6px;}
+  .prog-name{font-size:12px;color:var(--text2);flex:1;cursor:pointer;}
+  .prog-pct-wrap{display:flex;align-items:center;gap:4px;}
+  .prog-pct{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);font-weight:500;width:32px;text-align:right;}
+  .prog-track{height:3px;background:var(--s3);border-radius:2px;overflow:hidden;}
+  .prog-fill{height:100%;border-radius:2px;background:var(--accent);transition:width .4s ease;}
+  .prog-fill.orange{background:var(--orange);}
+  .prog-fill.blue{background:var(--blue);}
+  .prog-fill.purple{background:var(--purple);}
+  .prog-fill.green{background:var(--green);}
+
+  /* STAT ROWS */
+  .stat-list{display:flex;flex-direction:column;}
+  .stat-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--s3);font-size:12px;gap:8px;}
+  .stat-row:last-child{border-bottom:none;}
+  .stat-l{color:var(--text2);cursor:pointer;flex:1;}
+  .stat-l:hover{color:var(--text);}
+  .stat-r{font-weight:500;color:var(--text);font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;}
+  .stat-r:hover{color:var(--accent);}
+  .stat-r.red{color:var(--accent2);}
+  .stat-r.orange{color:var(--orange);}
+  .stat-r.green{color:var(--green);}
+  .stat-r.muted{color:var(--text3);}
+
+  /* RISK TAGS */
+  .risk-tag{font-family:'DM Mono',monospace;font-size:9px;padding:2px 8px;border-radius:10px;letter-spacing:.05em;cursor:pointer;transition:all .15s;}
+  .rt-watch{background:rgba(214,48,49,.12);color:var(--accent2);}
+  .rt-ok{background:rgba(74,222,128,.08);color:var(--green);}
+  .rt-low{background:var(--s3);color:var(--text3);}
+  .rt-warn{background:rgba(245,158,11,.1);color:var(--orange);}
+
+  /* HUB CARDS */
+  .hub-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .hub-card{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:18px 16px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;text-decoration:none;display:block;}
+  .hub-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--hc);opacity:0;transition:opacity .18s;}
+  .hub-card:hover{background:var(--s2);border-color:var(--hc);transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.3);}
+  .hub-card:hover::before{opacity:1;}
+  .hub-card.finance{--hc:var(--accent);}
+  .hub-card.education{--hc:var(--blue);}
+  .hub-card.personal{--hc:var(--purple);}
+  .hub-icon{font-size:22px;margin-bottom:9px;display:block;}
+  .hub-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+  .hub-sub{font-size:11px;color:var(--text3);line-height:1.5;}
+  .hub-arr{position:absolute;top:14px;right:14px;font-size:14px;color:var(--text4);transition:all .18s;}
+  .hub-card:hover .hub-arr{color:var(--hc);transform:translate(2px,-2px);}
+
+  /* MODAL */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
+  .modal-overlay.open{opacity:1;pointer-events:all;}
+  .modal{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:24px;width:100%;max-width:400px;margin:20px;}
+  .modal-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:16px;color:var(--text);}
+  .modal-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;margin-top:12px;}
+  .modal-label:first-of-type{margin-top:0;}
+  .modal-actions{display:flex;gap:8px;margin-top:18px;justify-content:flex-end;}
+  .btn{padding:7px 16px;border-radius:6px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;cursor:pointer;border:none;letter-spacing:.06em;transition:all .15s;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{opacity:.85;}
+  .btn-ghost{background:var(--s3);color:var(--text2);}
+  .btn-ghost:hover{background:var(--s4);color:var(--text);}
+  .btn-danger{background:rgba(214,48,49,.15);color:var(--accent2);}
+  .btn-danger:hover{background:rgba(214,48,49,.25);}
+
+  /* FOOTER */
+  .footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center;}
+  .footer-l{font-family:'DM Mono',monospace;font-size:9px;color:var(--text4);letter-spacing:.1em;}
+  .footer-l span{color:var(--accent);}
+  .phase-pill{font-family:'DM Mono',monospace;font-size:9px;color:var(--accent);border:1px solid var(--aborder);background:var(--adim);padding:5px 14px;border-radius:20px;letter-spacing:.12em;text-transform:uppercase;}
+
+  ::-webkit-scrollbar{width:4px;}
+  ::-webkit-scrollbar-track{background:var(--bg);}
+  ::-webkit-scrollbar-thumb{background:var(--b1);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-text">LOCK IN</div>
+  <div class="cover-badge">🔒 Lock In Phase · Year 1</div>
+</div>
+
+<div class="page">
+
+  <div class="hero a1">
+    <span class="hero-icon">🏠</span>
+    <div class="hero-title">Home Dashboard</div>
+    <div class="hero-sub">your daily command centre · lock in · compound · execute</div>
+  </div>
+
+  <!-- LOCK IN BANNER -->
+  <div class="lockin-banner a2">
+    <div>
+      <div class="lb-label">🔒 Lock In Phase — Year 1</div>
+      <div class="lb-week" id="weekNum">Week — of 52</div>
+      <div class="lb-sub" id="daysIn">— days into the phase · Stay consistent.</div>
+    </div>
+    <div class="lb-right">
+      <div class="lb-date" id="lbDate">—</div>
+      <div class="lb-tags">
+        <div class="lb-tag active">● Active</div>
+        <div class="lb-tag">Melbourne, VIC</div>
+        <div class="lb-tag">Target $120–150K by 23</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote a2">
+    <div class="quote-text">"Building a personal operating system that compounds across finance, career, business, health, and knowledge throughout my 20s."</div>
+  </div>
+
+  <!-- THIS WEEK -->
+  <div class="sl a3">This Week</div>
+
+  <div class="focus-block a3">
+    <div class="fb-label">This Week's #1 Focus — tap to edit</div>
+    <div class="fb-text" id="focusText" onclick="editFocus()" title="Tap to edit"></div>
+    <div class="fb-week" id="focusWeek"></div>
+  </div>
+
+  <div class="g3 mb12 a3">
+    <!-- Long Term Goals -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="card-title">🎯 Long Term Goals</div>
+        <div class="check-list" id="ltGoalsList"></div>
+        <button class="add-btn" onclick="addLTGoal()">＋ Add goal</button>
+      </div>
+    </div>
+
+    <!-- Weekly Goals -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="card-title">📋 Weekly Goals</div>
+        <div class="check-list" id="weeklyGoals"></div>
+        <button class="add-btn" onclick="addItem('weeklyGoals','goal')">＋ Add goal</button>
+      </div>
+    </div>
+
+    <!-- To-Do Today -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="card-title">✅ To-Do Today</div>
+        <div class="check-list" id="todoList"></div>
+        <button class="add-btn" onclick="addItem('todoList','todo')">＋ Add task</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Habit Tracker -->
+  <div class="card mb12 a3">
+    <div class="card-pad" style="padding-bottom:0;">
+      <div class="card-title">
+        🔁 Habit Tracker
+        <button class="icon-btn" onclick="addHabit()" title="Add habit">＋</button>
+      </div>
+    </div>
+    <div class="habit-list" id="habitTracker"></div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="sl a4">Calendar — <span id="calWeekLabel"></span></div>
+  <div class="mb28" style="background:var(--s1);border:1px solid var(--b1);border-radius:10px;overflow:hidden;">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--s2);border-bottom:1px solid var(--b1);">
+      <div style="width:8px;height:8px;border-radius:50%;background:#333;"></div>
+      <div style="width:8px;height:8px;border-radius:50%;background:#333;"></div>
+      <div style="width:8px;height:8px;border-radius:50%;background:#333;"></div>
+      <div style="flex:1;background:var(--s3);border-radius:4px;height:20px;display:flex;align-items:center;padding:0 10px;">
+        <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text4);">calendar.google.com · Ushan Garcia</span>
+      </div>
+      <span style="font-family:'DM Mono',monospace;font-size:9px;color:#4ade80;">● Live</span>
+    </div>
+    <iframe
+      src="https://calendar.google.com/calendar/embed?src=ushangarcia%40gmail.com&ctz=Australia%2FMelbourne&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&mode=WEEK&color=%23c0392b"
+      style="width:100%;height:600px;border:none;display:block;"
+      frameborder="0"
+      scrolling="no">
+    </iframe>
+  </div>
+
+  <!-- PORTFOLIO -->
+  <div class="sl a5">Financials — Live Portfolio</div>
+  <div class="embed-wrap mb12 a5">
+    <div class="embed-chrome">
+      <div style="width:8px;height:8px;border-radius:50%;background:#333;"></div>
+      <div style="width:8px;height:8px;border-radius:50%;background:#333;"></div>
+      <div style="width:8px;height:8px;border-radius:50%;background:#333;"></div>
+      <div class="ec-url"><span>ushan555.github.io/portfolio-tracker</span></div>
+      <span class="ec-live">● Live</span>
+    </div>
+    <iframe class="embed-frame" src="https://ushan555.github.io/portfolio-tracker" title="Live Portfolio Tracker" loading="lazy"></iframe>
+  </div>
+
+  <!-- Goals + Stats + Risks -->
+  <div class="g211 mb28 a5">
+    <div class="card">
+      <div class="card-pad">
+        <div class="card-title">
+          🎯 Goals Progress
+          <button class="icon-btn" onclick="addGoal()" title="Add goal">＋</button>
+        </div>
+        <div class="prog-list" id="goalsList"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-pad">
+        <div class="card-title">
+          ⚡ Quick Stats
+          <button class="icon-btn" onclick="addStat()" title="Add stat">＋</button>
+        </div>
+        <div class="stat-list" id="statsList"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-pad">
+        <div class="card-title">
+          ⚠️ Risks
+          <button class="icon-btn" onclick="addRisk()" title="Add risk">＋</button>
+        </div>
+        <div class="stat-list" id="risksList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HUBS -->
+  <div class="sl a6">Navigate — Your Hubs</div>
+  <div class="hub-grid mb28 a6">
+    <a class="hub-card finance" href="https://www.notion.so/35c68202d1fc81bf98ade9932883c11e" target="_blank">
+      <span class="hub-arr">↗</span><span class="hub-icon">💰</span>
+      <div class="hub-name">Finance Hub</div>
+      <div class="hub-sub">Net worth · ETFs · Cashflow · Career · Business</div>
+    </a>
+    <a class="hub-card education" href="https://www.notion.so/35c68202d1fc81478282c192057186c3" target="_blank">
+      <span class="hub-arr">↗</span><span class="hub-icon">📚</span>
+      <div class="hub-name">Education Hub</div>
+      <div class="hub-sub">Books · Macro · Frameworks · News analysis</div>
+    </a>
+    <a class="hub-card personal" href="https://www.notion.so/35c68202d1fc813dac3bdd65439005a9" target="_blank">
+      <span class="hub-arr">↗</span><span class="hub-icon">🧘</span>
+      <div class="hub-name">Personal Hub</div>
+      <div class="hub-sub">Health · Habits · Journal · Lock In strategy</div>
+    </a>
+  </div>
+
+  <div class="footer a7">
+    <div class="footer-l">Lock In OS · <span>Year 1 Active</span> · Built with Claude</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button onclick="if(confirm('Reset all data to defaults?')){localStorage.clear();location.reload();}" style="background:none;border:1px solid var(--b1);border-radius:6px;padding:4px 10px;font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);cursor:pointer;letter-spacing:.08em;">↺ Reset</button>
+      <div class="phase-pill">🔒 Lock In · <span id="footerWeek">Week —</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-title" id="modalTitle">Edit</div>
+    <div id="modalBody"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// STORAGE
+// ─────────────────────────────────────────────
+const PHASE_START = new Date('2026-05-10');
+const STATE_VERSION = '2';
+
+function load(key, def) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def; } catch(e) { return def; }
+}
+function save(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
+}
+
+// Version check — clears old state so new defaults load correctly
+if (localStorage.getItem('os_version') !== STATE_VERSION) {
+  ['os_focus','os_goals','os_todos','os_habits','os_cal','os_prog','os_stats','os_risks','os_ltgoals'].forEach(k => localStorage.removeItem(k));
+  localStorage.setItem('os_version', STATE_VERSION);
+}
+
+// ─────────────────────────────────────────────
+// DEFAULT DATA
+// ─────────────────────────────────────────────
+const DEFAULT_LTGOALS = [
+  { text:'Buy a car', done:false, category:'life' },
+  { text:'Get second income stream', done:false, category:'finance' },
+  { text:'Scale Nirvana Consignment', done:false, category:'business' },
+  { text:'Net worth $120K by 23', done:false, category:'finance' },
+  { text:'Full-time broker role', done:false, category:'career' },
+  { text:'Japan sourcing trip', done:false, category:'life' },
+];
+  { text:'Add 3 lender product notes', done:true },
+  { text:'List 2 items on eBay / Depop', done:true },
+  { text:'$500 ETF contribution', done:false },
+  { text:'Finish current book chapter', done:false },
+  { text:'4× gym sessions this week', done:false },
+];
+const DEFAULT_TODOS = [
+  { text:'Review CBA home loan rates', done:false, priority:'high' },
+  { text:'Upload Nirvana listings', done:false, priority:'high' },
+  { text:'Read FT — RBA decision', done:false, priority:'med' },
+  { text:'Update net worth tracker', done:false, priority:'med' },
+  { text:'Morning workout', done:true, priority:'low' },
+];
+const DEFAULT_HABITS = [
+  { name:'Morning workout', days:[1,1,1,0,2,null,null] },
+  { name:'Read / study',    days:[1,1,0,1,2,null,null] },
+  { name:'No junk food',    days:[1,1,1,1,2,null,null] },
+  { name:'Broking notes',   days:[1,0,1,1,2,null,null] },
+  { name:'Macro read',      days:[1,1,1,0,2,null,null] },
+];
+// days: 1=done, 0=miss, 2=today (pending), null=future
+const DEFAULT_FOCUS = 'Build broking knowledge base';
+const DEFAULT_CAL_EVENTS = [
+  {day:0,slot:0,text:'🏋️ Gym',color:'purple'},
+  {day:1,slot:0,text:'🏋️ Gym',color:'purple'},
+  {day:2,slot:0,text:'🏋️ Gym',color:'purple'},
+  {day:4,slot:0,text:'🏋️ Gym',color:'purple'},
+  {day:0,slot:1,text:'📋 Lender notes',color:'red'},
+  {day:2,slot:1,text:'📰 FT read',color:'blue'},
+  {day:3,slot:1,text:'📋 Broker work',color:'red'},
+  {day:4,slot:1,text:'📋 CBA rates',color:'red'},
+  {day:1,slot:2,text:'📚 Study',color:'blue'},
+  {day:3,slot:2,text:'📚 Study',color:'blue'},
+  {day:4,slot:2,text:'🧥 Nirvana list',color:'orange'},
+  {day:1,slot:3,text:'🧥 Nirvana',color:'orange'},
+  {day:4,slot:3,text:'📊 NW update',color:'red'},
+  {day:0,slot:4,text:'✅ Review',color:'green'},
+];
+const DEFAULT_PROG = [
+  { name:'Emergency Fund ($15K)', pct:67, color:'' },
+  { name:'Car Savings', pct:40, color:'orange' },
+  { name:'ETF Target ($20K)', pct:31, color:'blue' },
+  { name:'NW $120K by 23', pct:75, color:'purple' },
+  { name:'Travel Fund', pct:20, color:'green' },
+];
+const DEFAULT_STATS = [
+  { label:'Fortnightly ETF', value:'$500', style:'red' },
+  { label:'Super', value:'$7,000', style:'' },
+  { label:'Loan owed back', value:'$15,000', style:'' },
+  { label:'Nirvana (MTD)', value:'—', style:'muted' },
+  { label:'Books read \'26', value:'3', style:'orange' },
+  { label:'Target by 23', value:'$120–150K', style:'red' },
+  { label:'Target by 25', value:'$300–450K', style:'red' },
+];
+const DEFAULT_RISKS = [
+  { label:'Overcomplication', status:'Watch', style:'rt-watch' },
+  { label:'Burnout', status:'Watch', style:'rt-watch' },
+  { label:'Lifestyle inflation', status:'Low', style:'rt-low' },
+  { label:'Overtrading', status:'Low', style:'rt-low' },
+  { label:'Consistency', status:'Strong', style:'rt-ok' },
+  { label:'Commodity conc.', status:'Watch', style:'rt-warn' },
+];
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let state = {
+  focus:   load('os_focus', DEFAULT_FOCUS),
+  goals:   load('os_goals', DEFAULT_GOALS),
+  todos:   load('os_todos', DEFAULT_TODOS),
+  habits:  load('os_habits', DEFAULT_HABITS),
+  calEvs:  load('os_cal', DEFAULT_CAL_EVENTS),
+  prog:    load('os_prog', DEFAULT_PROG),
+  stats:   load('os_stats', DEFAULT_STATS),
+  risks:   load('os_risks', DEFAULT_RISKS),
+  ltGoals: load('os_ltgoals', DEFAULT_LTGOALS),
+};
+
+function saveAll() {
+  save('os_focus', state.focus);
+  save('os_goals', state.goals);
+  save('os_todos', state.todos);
+  save('os_habits', state.habits);
+  save('os_cal', state.calEvs);
+  save('os_prog', state.prog);
+  save('os_stats', state.stats);
+  save('os_risks', state.risks);
+  save('os_ltgoals', state.ltGoals);
+}
+
+// ─────────────────────────────────────────────
+// DATE / WEEK
+// ─────────────────────────────────────────────
+function getWeekNumber(d) {
+  const start = new Date(d.getFullYear(), 0, 1);
+  return Math.ceil(((d - start) / 86400000 + start.getDay() + 1) / 7);
+}
+function initDate() {
+  const now = new Date();
+  const week = getWeekNumber(now);
+  const days = Math.floor((now - PHASE_START) / 86400000);
+  document.getElementById('lbDate').textContent =
+    now.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).toUpperCase();
+  document.getElementById('weekNum').textContent = `Week ${week} of 52`;
+  document.getElementById('daysIn').textContent = `${Math.max(0,days)} days into the phase · Stay consistent.`;
+  document.getElementById('focusWeek').textContent = `Week ${week} of 52 · Lock In Year 1`;
+  document.getElementById('footerWeek').textContent = `Week ${week}`;
+
+  // Calendar week label
+  const mon = new Date(now);
+  mon.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+  const fmt = d => d.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
+  document.getElementById('calWeekLabel').textContent = `${fmt(mon)} – ${fmt(sun)}`;
+}
+
+// ─────────────────────────────────────────────
+// FOCUS
+// ─────────────────────────────────────────────
+function renderFocus() {
+  document.getElementById('focusText').textContent = state.focus;
+}
+function editFocus() {
+  openModal('Edit Weekly Focus', `
+    <div class="modal-label">Focus text</div>
+    <input class="edit-input" id="mFocus" value="${escHtml(state.focus)}" placeholder="This week's #1 priority...">
+  `, [
+    {label:'Save', cls:'btn-primary', fn: () => {
+      state.focus = document.getElementById('mFocus').value.trim() || state.focus;
+      saveAll(); renderFocus(); closeModal();
+    }},
+    {label:'Cancel', cls:'btn-ghost', fn: closeModal},
+  ]);
+  setTimeout(()=>document.getElementById('mFocus').focus(),100);
+}
+
+// ─────────────────────────────────────────────
+// CHECKLIST (goals + todos)
+// ─────────────────────────────────────────────
+function renderGoals() {
+  const el = document.getElementById('weeklyGoals');
+  el.innerHTML = state.goals.map((g,i) => `
+    <div class="check-item ${g.done?'done':''}" data-i="${i}">
+      <div class="ci-box" onclick="toggleGoal(${i})">${g.done?'✓':''}</div>
+      <div class="ci-text" onclick="toggleGoal(${i})">${escHtml(g.text)}</div>
+      <button class="icon-btn" onclick="editGoalItem(${i})" title="Edit">✎</button>
+      <button class="icon-btn" onclick="deleteGoal(${i})" title="Delete">✕</button>
+    </div>`).join('');
+}
+function toggleGoal(i) {
+  state.goals[i].done = !state.goals[i].done;
+  saveAll(); renderGoals();
+}
+function deleteGoal(i) { state.goals.splice(i,1); saveAll(); renderGoals(); }
+function editGoalItem(i) {
+  openModal('Edit Goal', `
+    <div class="modal-label">Goal text</div>
+    <input class="edit-input" id="mGoalText" value="${escHtml(state.goals[i].text)}">
+  `, [
+    {label:'Save', cls:'btn-primary', fn:()=>{
+      state.goals[i].text = document.getElementById('mGoalText').value.trim() || state.goals[i].text;
+      saveAll(); renderGoals(); closeModal();
+    }},
+    {label:'Cancel', cls:'btn-ghost', fn:closeModal},
+  ]);
+  setTimeout(()=>document.getElementById('mGoalText').focus(),100);
+}
+function addItem(listId, type) {
+  if (type === 'goal') {
+    openModal('Add Weekly Goal', `
+      <div class="modal-label">Goal text</div>
+      <input class="edit-input" id="mNewGoal" placeholder="What do you want to achieve this week?">
+    `, [
+      {label:'Add', cls:'btn-primary', fn:()=>{
+        const t = document.getElementById('mNewGoal').value.trim();
+        if(t){ state.goals.push({text:t,done:false}); saveAll(); renderGoals(); }
+        closeModal();
+      }},
+      {label:'Cancel', cls:'btn-ghost', fn:closeModal},
+    ]);
+    setTimeout(()=>document.getElementById('mNewGoal').focus(),100);
+  } else {
+    openModal('Add Task', `
+      <div class="modal-label">Task</div>
+      <input class="edit-input" id="mNewTodo" placeholder="What needs to be done today?">
+      <div class="modal-label">Priority</div>
+      <select class="edit-input" id="mNewPri">
+        <option value="high">High</option>
+        <option value="med" selected>Med</option>
+        <option value="low">Low</option>
+      </select>
+    `, [
+      {label:'Add', cls:'btn-primary', fn:()=>{
+        const t = document.getElementById('mNewTodo').value.trim();
+        const p = document.getElementById('mNewPri').value;
+        if(t){ state.todos.push({text:t,done:false,priority:p}); saveAll(); renderTodos(); }
+        closeModal();
+      }},
+      {label:'Cancel', cls:'btn-ghost', fn:closeModal},
+    ]);
+    setTimeout(()=>document.getElementById('mNewTodo').focus(),100);
+  }
+}
+
+function renderTodos() {
+  const el = document.getElementById('todoList');
+  el.innerHTML = state.todos.map((t,i) => `
+    <div class="check-item ${t.done?'done':''}">
+      <div class="ci-box" onclick="toggleTodo(${i})">${t.done?'✓':''}</div>
+      <span class="ci-tag ${t.priority}" onclick="cyclePriority(${i})">${t.priority.charAt(0).toUpperCase()+t.priority.slice(1)}</span>
+      <div class="ci-text" onclick="toggleTodo(${i})">${escHtml(t.text)}</div>
+      <button class="icon-btn" onclick="editTodoItem(${i})" title="Edit">✎</button>
+      <button class="icon-btn" onclick="deleteTodo(${i})" title="Delete">✕</button>
+    </div>`).join('');
+}
+function toggleTodo(i) { state.todos[i].done = !state.todos[i].done; saveAll(); renderTodos(); }
+function deleteTodo(i) { state.todos.splice(i,1); saveAll(); renderTodos(); }
+function cyclePriority(i) {
+  const cycle = ['high','med','low'];
+  const idx = cycle.indexOf(state.todos[i].priority);
+  state.todos[i].priority = cycle[(idx+1)%3];
+  saveAll(); renderTodos();
+}
+function editTodoItem(i) {
+  openModal('Edit Task', `
+    <div class="modal-label">Task</div>
+    <input class="edit-input" id="mTodoText" value="${escHtml(state.todos[i].text)}">
+    <div class="modal-label">Priority</div>
+    <select class="edit-input" id="mTodoPri">
+      <option value="high" ${state.todos[i].priority==='high'?'selected':''}>High</option>
+      <option value="med" ${state.todos[i].priority==='med'?'selected':''}>Med</option>
+      <option value="low" ${state.todos[i].priority==='low'?'selected':''}>Low</option>
+    </select>
+  `, [
+    {label:'Save', cls:'btn-primary', fn:()=>{
+      state.todos[i].text = document.getElementById('mTodoText').value.trim() || state.todos[i].text;
+      state.todos[i].priority = document.getElementById('mTodoPri').value;
+      saveAll(); renderTodos(); closeModal();
+    }},
+    {label:'Cancel', cls:'btn-ghost', fn:closeModal},
+  ]);
+  setTimeout(()=>document.getElementById('mTodoText').focus(),100);
+}
+
+// ─────────────────────────────────────────────
+// LONG TERM GOALS
+// ─────────────────────────────────────────────
+const LT_CATEGORY_COLORS = {
+  finance:'red', career:'blue', business:'orange', life:'purple', health:'green'
+};
+
+function renderLTGoals() {
+  const el = document.getElementById('ltGoalsList');
+  el.innerHTML = state.ltGoals.map((g,i) => {
+    const catColor = LT_CATEGORY_COLORS[g.category] || 'gray';
+    return `<div class="check-item ${g.done?'done':''}">
+      <div class="ci-box" onclick="toggleLTGoal(${i})">${g.done?'✓':''}</div>
+      <span class="ci-tag ${catColor}" onclick="editLTGoalItem(${i})" style="cursor:pointer;font-size:9px;">${g.category}</span>
+      <div class="ci-text" onclick="toggleLTGoal(${i})">${escHtml(g.text)}</div>
+      <button class="icon-btn" onclick="editLTGoalItem(${i})" title="Edit">✎</button>
+      <button class="icon-btn" onclick="deleteLTGoal(${i})" title="Delete">✕</button>
+    </div>`;
+  }).join('');
+}
+function toggleLTGoal(i) { state.ltGoals[i].done = !state.ltGoals[i].done; saveAll(); renderLTGoals(); }
+function deleteLTGoal(i) { state.ltGoals.splice(i,1); saveAll(); renderLTGoals(); }
+function editLTGoalItem(i) {
+  openModal('Edit Long Term Goal', `
+    <div class="modal-label">Goal</div>
+    <input class="edit-input" id="mLTText" value="${escHtml(state.ltGoals[i].text)}">
+    <div class="modal-label">Category</div>
+    <select class="edit-input" id="mLTCat">
+      <option value="finance" ${state.ltGoals[i].category==='finance'?'selected':''}>Finance</option>
+      <option value="career" ${state.ltGoals[i].category==='career'?'selected':''}>Career</option>
+      <option value="business" ${state.ltGoals[i].category==='business'?'selected':''}>Business</option>
+      <option value="life" ${state.ltGoals[i].category==='life'?'selected':''}>Life</option>
+      <option value="health" ${state.ltGoals[i].category==='health'?'selected':''}>Health</option>
+    </select>
+  `, [
+    {label:'Save', cls:'btn-primary', fn:()=>{
+      state.ltGoals[i].text = document.getElementById('mLTText').value.trim() || state.ltGoals[i].text;
+      state.ltGoals[i].category = document.getElementById('mLTCat').value;
+      saveAll(); renderLTGoals(); closeModal();
+    }},
+    {label:'Cancel', cls:'btn-ghost', fn:closeModal},
+  ]);
+  setTimeout(()=>document.getElementById('mLTText').focus(),100);
+}
+function addLTGoal() {
+  openModal('Add Long Term Goal', `
+    <div class="modal-label">Goal</div>
+    <input class="edit-input" id="mNewLT" placeholder="e.g. Buy a car, Full-time broker role...">
+    <div class="modal-label">Category</div>
+    <select class="edit-input" id="mNewLTCat">
+      <option value="finance">Finance</option>
+      <option value="career">Career</option>
+      <option value="business">Business</option>
+      <option value="life" selected>Life</option>
+      <option value="health">Health</option>
+    </select>
+  `, [
+    {label:'Add', cls:'btn-primary', fn:()=>{
+      const t = document.getElementById('mNewLT').value.trim();
+      const c = document.getElementById('mNewLTCat').value;
+      if(t){ state.ltGoals.push({text:t,done:false,category:c}); saveAll(); renderLTGoals(); }
+      closeModal();
+    }},
+    {label:'Cancel', cls:'btn-ghost', fn:closeModal},
+  ]);
+  setTimeout(()=>document.getElementById('mNewLT').focus(),100);
+}
+const DAY_LABELS = ['M','T','W','T','F','S','S'];
+function renderHabits() {
+  const el = document.getElementById('habitTracker');
+  el.innerHTML = state.habits.map((h,hi) => `
+    <div class="habit-row">
+      <div class="habit-name" onclick="editHabitName(${hi})">${escHtml(h.name)}</div>
+      <div class="habit-days">
+        ${h.days.map((d,di) => {
+          let cls = d===1?'done':d===0?'miss':d===2?'today':'';
+          return `<div class="hd ${cls}" onclick="toggleHabit(${hi},${di})">${DAY_LABELS[di]}</div>`;
+        }).join('')}
+      </div>
+      <button class="icon-btn" onclick="deleteHabit(${hi})" title="Delete habit" style="margin-left:6px;">✕</button>
+    </div>`).join('');
+}
+function toggleHabit(hi,di) {
+  const d = state.habits[hi].days[di];
+  if(d===2) { state.habits[hi].days[di]=1; } // today: mark done
+  else if(d===1) { state.habits[hi].days[di]=0; } // done → miss
+  else if(d===0) { state.habits[hi].days[di]=null; } // miss → empty
+  else { state.habits[hi].days[di]=1; } // empty/null → done
+  saveAll(); renderHabits();
+}
+function editHabitName(i) {
+  openModal('Edit Habit', `
+    <div class="modal-label">Habit name</div>
+    <input class="edit-input" id="mHabitName" value="${escHtml(state.habits[i].name)}">
+  `, [
+    {label:'Save', cls:'btn-primary', fn:()=>{
+      const t = document.getElementById('mHabitName').value.trim();
+      if(t) state.habits[i].name = t;
+      saveAll(); renderHabits(); closeModal();
+    }},
+    {label:'Cancel', cls:'btn-ghost', fn:closeModal},
+  ]);
+  setTimeout(()=>document.getElementById('mHabitName').focus(),100);
+}
+function deleteHabit(i) { state.habits.splice(i,1); saveAll(); renderHabits(); }
+function addHabit() {
+  openModal('Add Habit', `
+    <div class="modal-label">Habit name</div>
+    <input class="edit-input" id="mNewHabit" placeholder="e.g. Cold shower, Read 30 min...">
+  `, [
+    {label:'Add', cls:'btn-primary', fn:()=>{
+      const t = document.getElementById('mNewHabit').value.trim();
+      if(t) { state.habits.push({name:t, days:[null,null,null,null,null,null,null]}); saveAll(); renderHabits(); }
+      closeModal();
+    }},
+    {label:'Cancel', cls:'btn-ghost', fn:closeModal},
+  ]);
+  setTimeout(()=>document.getElementById('mNewHabit').focus(),100);
+}
+
+// ─────────────────────────────────────────────
+// CALENDAR
+// ─────────────────────────────────────────────
+const CAL_SLOTS = ['8 AM','9 AM','11 AM','2 PM','6 PM'];
+const CAL_DAYS_SHORT = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
+const CAL_COLORS = ['red','orange','blue','purple','green'];
+
+function getWeekDates() {
+  const now = new Date();
+  const mon = new Date(now);
+  mon.setDate(now.getDate() - ((now.getDay()+6)%7));
+  return Array.from({length:7}, (_,i) => { const d=new Date(mon); d.setDate(mon.getDate()+i); return d; });
+}
+
+function renderCalendar() {
+  const wrap = document.getElementById('calendarWrap');
+  const dates = getWeekDates();
+  const today = new Date().getDay(); // 0=Sun
+  const todayCol = (today+6)%7; // 0=Mon
+
+  let html = `<div class="week-cal">`;
+  // Headers
+  html += `<div class="wc-col-hdr time-col"></div>`;
+  dates.forEach((d,i) => {
+    const isTod = i===todayCol;
+    html += `<div class="wc-col-hdr ${isTod?'today-hdr':''}">
+      <div class="wc-day-name">${CAL_DAYS_SHORT[i]}</div>
+      <div class="wc-day-num">${d.getDate()}</div>
+    </div>`;
+  });
+
+  // Rows
+  CAL_SLOTS.forEach((slot,si) => {
+    const isLast = si===CAL_SLOTS.length-1;
+    html += `<div class="wc-time ${isLast?'wc-last':''}">${slot}</div>`;
+    for(let di=0;di<7;di++) {
+      const isTod = di===todayCol;
+      const evs = state.calEvs.filter(e=>e.day===di && e.slot===si);
+      html += `<div class="wc-cell ${isTod?'today-col':''} ${isLast?'wc-last':''}" ${di===6?'style="border-right:none;"':''} onclick="calCellClick(${di},${si},event)">
+        ${evs.map((ev,ei) => {
+          const idx = state.calEvs.indexOf(ev);
+          return `<div class="wc-ev ${ev.color}" onclick="event.stopPropagation()">
+            <span>${escHtml(ev.text)}</span>
+            <span class="ev-del" onclick="deleteCalEv(${idx},event)">✕</span>
+          </div>`;
+        }).join('')}
+      </div>`;
+    }
+  });
+  html += `</div>`;
+  wrap.innerHTML = html;
+}
+
+function calCellClick(day, slot, e) {
+  if(e.target.classList.contains('ev-del')) return;
+  openModal('Add Calendar Event', `
+    <div class="modal-label">Event text</div>
+    <input class="edit-input" id="mCalText" placeholder="e.g. 🏋️ Gym, 📋 Broker work...">
+    <div class="modal-label">Colour</div>
+    <select class="edit-input" id="mCalColor">
+      <option value="red">Red (Finance/Broking)</option>
+      <option value="orange">Orange (Business)</option>
+      <option value="blue">Blue (Education)</option>
+      <option value="purple">Purple (Health)</option>
+      <option value="green">Green (Review)</option>
+    </select>
+  `, [
+    {label:'Add', cls:'btn-primary', fn:()=>{
+      const t = document.getElementById('mCalText').value.trim();
+      const c = document.getElementById('mCalColor').value;
+      if(t) { state.calEvs.push({day,slot,text:t,color:c}); saveAll(); renderCalendar(); }
+      closeModal();
+    }},
+    {label:'Cancel', cls:'btn-ghost', fn:closeModal},
+  ]);
+  setTimeout(()=>document.getElementById('mCalText').focus(),100);
+}
+function deleteCalEv(idx, e) {
+  e.stopPropagation();
+  state.calEvs.splice(idx,1); saveAll(); renderCalendar();
+}
+
+// ─────────────────────────────────────────────
+// GOALS PROGRESS
+// ─────────────────────────────────────────────
+function renderProg() {
+  const el = document.getElementById('goalsList');
+  el.innerHTML = state.prog.map((g,i) => `
+    <div class="prog-item">
+      <div class="prog-header">
+        <div class="prog-name" onclick="editProgItem(${i})">${escHtml(g.name)}</div>
+        <div class="prog-pct-wrap">
+          <div class="prog-pct">${g.pct}%</div>
+          <button class="icon-btn" onclick="deleteProgItem(${i})" title="Delete">✕</button>
+        </div>
+      </div>
+      <div class="prog-track"><div class="prog-fill ${g.color}" style="width:${g.pct}%"></div></div>
+    </div>`).join('');
+}
+function editProgItem(i) {
+  const colors = ['','orange','blue','purple','green'];
+  openModal('Edit Goal', `
+    <div class="modal-label">Goal name</div>
+    <input class="edit-input" id="mProgName" value="${escHtml(state.prog[i].name)}">
+    <div class="modal-label">Progress (%)</div>
+    <input class="edit-input" type="number" id="mProgPct" min="0" max="100" value="${state.prog[i].pct}">
+    <div class="modal-label">Colour</div>
+    <select class="edit-input" id="mProgColor">
+      <option value="" ${!state.prog[i].color?'selected':''}>Red (default)</option>
+      <option value="orange" ${state.prog[i].color==='orange'?'selected':''}>Orange</option>
+      <option value="blue" ${state.prog[i].color==='blue'?'selected':''}>Blue</option>
+      <option value="purple" ${state.prog[i].color==='purple'?'selected':''}>Purple</option>
+      <option value="green" ${state.prog[i].color==='green'?'selected':''}>Green</option>
+    </select>
+  `, [
+    {label:'Save', cls:'btn-primary', fn:()=>{
+      state.prog[i].name = document.getElementById('mProgName').value.trim() || state.prog[i].name;
+      state.prog[i].pct  = Math.min(100,Math.max(0,parseInt(document.getElementById('mProgPct').value)||0));
+      state.prog[i].color= document.getElementById('mProgColor').value;
+      saveAll(); renderProg(); closeModal();
+    }},
+    {label:'Cancel', cls:'btn-ghost', fn:closeModal},
+  ]);
+  setTimeout(()=>document.getElementById('mProgName').focus(),100);
+}
+function deleteProgItem(i) { state.prog.splice(i,1); saveAll(); renderProg(); }
+function addGoal() {
+  openModal('Add Goal', `
+    <div class="modal-label">Goal name</div>
+    <input class="edit-input" id="mNewProgName" placeholder="e.g. House deposit ($50K)">
+    <div class="modal-label">Progress (%)</div>
+    <input class="edit-input" type="number" id="mNewProgPct" min="0" max="100" value="0">
+    <div class="modal-label">Colour</div>
+    <select class="edit-input" id="mNewProgColor">
+      <option value="">Red</option><option value="orange">Orange</option>
+      <option value="blue">Blue</option><option value="purple">Purple</option><option value="green">Green</option>
+    </select>
+  `, [
+    {label:'Add', cls:'btn-primary', fn:()=>{
+      const n = document.getElementById('mNewProgName').value.trim();
+      if(n) {
+        state.prog.push({name:n,pct:parseInt(document.getElementById('mNewProgPct').value)||0,color:document.getElementById('mNewProgColor').value});
+        saveAll(); renderProg();
+      }
+      closeModal();
+    }},
+    {label:'Cancel', cls:'btn-ghost', fn:closeModal},
+  ]);
+  setTimeout(()=>document.getElementById('mNewProgName').focus(),100);
+}
+
+// ─────────────────────────────────────────────
+// STATS
+// ─────────────────────────────────────────────
+function renderStats() {
+  const el = document.getElementById('statsList');
+  el.innerHTML = state.stats.map((s,i) => `
+    <div class="stat-row">
+      <div class="stat-l" onclick="editStat(${i})">${escHtml(s.label)}</div>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <div class="stat-r ${s.style}" onclick="editStat(${i})">${escHtml(s.value)}</div>
+        <button class="icon-btn" onclick="deleteStat(${i})" title="Delete">✕</button>
+      </div>
+    </div>`).join('');
+}
+function editStat(i) {
+  openModal('Edit Stat', `
+    <div class="modal-label">Label</div>
+    <input class="edit-input" id="mStatLabel" value="${escHtml(state.stats[i].label)}">
+    <div class="modal-label">Value</div>
+    <input class="edit-input" id="mStatValue" value="${escHtml(state.stats[i].value)}">
+    <div class="modal-label">Colour</div>
+    <select class="edit-input" id="mStatStyle">
+      <option value="" ${!state.stats[i].style?'selected':''}>Default</option>
+      <option value="red" ${state.stats[i].style==='red'?'selected':''}>Red</option>
+      <option value="orange" ${state.stats[i].style==='orange'?'selected':''}>Orange</option>
+      <option value="green" ${state.stats[i].style==='green'?'selected':''}>Green</option>
+      <option value="muted" ${state.stats[i].style==='muted'?'selected':''}>Muted</option>
+    </select>
+  `, [
+    {label:'Save', cls:'btn-primary', fn:()=>{
+      state.stats[i].label = document.getElementById('mStatLabel').value.trim() || state.stats[i].label;
+      state.stats[i].value = document.getElementById('mStatValue').value.trim();
+      state.stats[i].style = document.getElementById('mStatStyle').value;
+      saveAll(); renderStats(); closeModal();
+    }},
+    {label:'Cancel', cls:'btn-ghost', fn:closeModal},
+  ]);
+  setTimeout(()=>document.getElementById('mStatLabel').focus(),100);
+}
+function deleteStat(i) { state.stats.splice(i,1); saveAll(); renderStats(); }
+function addStat() {
+  openModal('Add Stat', `
+    <div class="modal-label">Label</div>
+    <input class="edit-input" id="mNewStatLabel" placeholder="e.g. Side income">
+    <div class="modal-label">Value</div>
+    <input class="edit-input" id="mNewStatValue" placeholder="e.g. $1,200/mo">
+  `, [
+    {label:'Add', cls:'btn-primary', fn:()=>{
+      const l = document.getElementById('mNewStatLabel').value.trim();
+      const v = document.getElementById('mNewStatValue').value.trim();
+      if(l){ state.stats.push({label:l,value:v||'—',style:''}); saveAll(); renderStats(); }
+      closeModal();
+    }},
+    {label:'Cancel', cls:'btn-ghost', fn:closeModal},
+  ]);
+  setTimeout(()=>document.getElementById('mNewStatLabel').focus(),100);
+}
+
+// ─────────────────────────────────────────────
+// RISKS
+// ─────────────────────────────────────────────
+function renderRisks() {
+  const el = document.getElementById('risksList');
+  el.innerHTML = state.risks.map((r,i) => `
+    <div class="stat-row">
+      <div class="stat-l" onclick="editRisk(${i})">${escHtml(r.label)}</div>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <span class="risk-tag ${r.style}" onclick="cycleRisk(${i})">${escHtml(r.status)}</span>
+        <button class="icon-btn" onclick="deleteRisk(${i})" title="Delete">✕</button>
+      </div>
+    </div>`).join('');
+}
+function cycleRisk(i) {
+  const cycle = [
+    {status:'Watch',style:'rt-watch'},
+    {status:'Low',style:'rt-low'},
+    {status:'Strong',style:'rt-ok'},
+    {status:'Monitor',style:'rt-warn'},
+  ];
+  const idx = cycle.findIndex(c=>c.status===state.risks[i].status);
+  const next = cycle[(idx+1)%cycle.length];
+  state.risks[i].status = next.status; state.risks[i].style = next.style;
+  saveAll(); renderRisks();
+}
+function editRisk(i) {
+  openModal('Edit Risk', `
+    <div class="modal-label">Risk label</div>
+    <input class="edit-input" id="mRiskLabel" value="${escHtml(state.risks[i].label)}">
+  `, [
+    {label:'Save', cls:'btn-primary', fn:()=>{
+      state.risks[i].label = document.getElementById('mRiskLabel').value.trim() || state.risks[i].label;
+      saveAll(); renderRisks(); closeModal();
+    }},
+    {label:'Cancel', cls:'btn-ghost', fn:closeModal},
+  ]);
+  setTimeout(()=>document.getElementById('mRiskLabel').focus(),100);
+}
+function deleteRisk(i) { state.risks.splice(i,1); saveAll(); renderRisks(); }
+function addRisk() {
+  openModal('Add Risk', `
+    <div class="modal-label">Risk</div>
+    <input class="edit-input" id="mNewRisk" placeholder="e.g. Over-leveraging">
+    <div class="modal-label">Status</div>
+    <select class="edit-input" id="mNewRiskStatus">
+      <option value="Watch|rt-watch">Watch</option>
+      <option value="Low|rt-low">Low</option>
+      <option value="Strong|rt-ok">Strong</option>
+      <option value="Monitor|rt-warn">Monitor</option>
+    </select>
+  `, [
+    {label:'Add', cls:'btn-primary', fn:()=>{
+      const l = document.getElementById('mNewRisk').value.trim();
+      const sv = document.getElementById('mNewRiskStatus').value.split('|');
+      if(l){ state.risks.push({label:l,status:sv[0],style:sv[1]}); saveAll(); renderRisks(); }
+      closeModal();
+    }},
+    {label:'Cancel', cls:'btn-ghost', fn:closeModal},
+  ]);
+  setTimeout(()=>document.getElementById('mNewRisk').focus(),100);
+}
+
+// ─────────────────────────────────────────────
+// MODAL
+// ─────────────────────────────────────────────
+function openModal(title, body, actions) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = body;
+  document.getElementById('modalActions').innerHTML = actions.map((a,i) =>
+    `<button class="btn ${a.cls}" id="mBtn${i}">${a.label}</button>`).join('');
+  actions.forEach((a,i) => document.getElementById(`mBtn${i}`).onclick = a.fn);
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal(e) {
+  // Called directly (no argument) — always close
+  // Called from overlay click — only close if clicking the overlay itself
+  if(e && e.target && e.target !== document.getElementById('modalOverlay')) return;
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+// ─────────────────────────────────────────────
+// UTILS
+// ─────────────────────────────────────────────
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+initDate();
+renderFocus();
+renderGoals();
+renderTodos();
+renderLTGoals();
+renderHabits();
+try { renderCalendar(); } catch(e) { console.error('Calendar error:', e); }
+renderProg();
+renderStats();
+renderRisks();
+
+// Close modal on Escape
+document.addEventListener('keydown', e => { if(e.key==='Escape') document.getElementById('modalOverlay').classList.remove('open'); });
+</script>
+</body>
+</html>
